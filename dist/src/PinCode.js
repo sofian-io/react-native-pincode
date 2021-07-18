@@ -95,7 +95,7 @@ class PinCode extends React.PureComponent {
                     opacity: [
                         this.state.showError && !this.state.attemptFailed ? 0.5 : 1
                     ],
-                    timing: { duration: 200, ease: d3_ease_1.easeLinear }
+                    timing: { duration: 100, ease: d3_ease_1.easeLinear }
                 } }, ({ opacity }) => (React.createElement(react_native_1.TouchableHighlight, { style: [
                     styles.buttonCircle,
                     { backgroundColor: this.props.colorCircleButtons },

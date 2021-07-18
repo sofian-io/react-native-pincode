@@ -11,8 +11,8 @@ import {
   View,
   ViewStyle
 } from 'react-native'
-import * as SecureStore from 'expo-secure-store';
-import TouchID from 'react-native-touch-id'
+import * as SecureStore from 'expo-secure-store'
+import * as LocalAuthentication from 'expo-local-authentication'
 
 /**
  * Pin Code Enter PIN Page
@@ -141,7 +141,7 @@ class PinCodeEnter extends React.PureComponent<IProps, IState> {
   }
 
   triggerTouchID() {
-    !!TouchID && TouchID.isSupported()
+    !!LocalAuthentication && LocalAuthentication.isEnrolledAsync()
       .then(() => {
         setTimeout(() => {
           this.launchTouchID()
@@ -216,12 +216,7 @@ class PinCodeEnter extends React.PureComponent<IProps, IState> {
       passcodeFallback: this.props.passcodeFallback
     }
     try {
-      await TouchID.authenticate(
-        this.props.touchIDSentence,
-        Object.assign({}, optionalConfigObject, {
-          title: this.props.touchIDTitle
-        })
-      ).then((success: any) => {
+      await LocalAuthentication.authenticateAsync().then((success: any) => {
         this.endProcess(this.props.storedPin || this.keyChainResult)
       })
     } catch (e) {

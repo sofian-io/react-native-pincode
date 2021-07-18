@@ -7,7 +7,7 @@ const async_storage_1 = require("@react-native-async-storage/async-storage");
 const React = require("react");
 const react_native_1 = require("react-native");
 const SecureStore = require("expo-secure-store");
-const react_native_touch_id_1 = require("react-native-touch-id");
+const LocalAuthentication = require("expo-local-authentication");
 class PinCodeEnter extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -80,7 +80,7 @@ class PinCodeEnter extends React.PureComponent {
         }
     }
     triggerTouchID() {
-        !!react_native_touch_id_1.default && react_native_touch_id_1.default.isSupported()
+        !!LocalAuthentication && LocalAuthentication.isEnrolledAsync()
             .then(() => {
             setTimeout(() => {
                 this.launchTouchID();
@@ -102,9 +102,7 @@ class PinCodeEnter extends React.PureComponent {
             passcodeFallback: this.props.passcodeFallback
         };
         try {
-            await react_native_touch_id_1.default.authenticate(this.props.touchIDSentence, Object.assign({}, optionalConfigObject, {
-                title: this.props.touchIDTitle
-            })).then((success) => {
+            await LocalAuthentication.authenticateAsync().then((success) => {
                 this.endProcess(this.props.storedPin || this.keyChainResult);
             });
         }
