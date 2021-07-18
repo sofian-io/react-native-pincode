@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Keychain from 'react-native-keychain'
+import * as SecureStore from 'expo-secure-store';
 
 export enum PinResultStatus {
   initial = 'initial',
@@ -10,22 +10,15 @@ export enum PinResultStatus {
 }
 
 export const hasPinCode = async (serviceName: string) => {
-  return await Keychain.getInternetCredentials(serviceName).then(res => {
-    return !!res && !!res.password
+  return await SecureStore.getItemAsync(serviceName).then(password => {
+    return !!password
   })
 }
 
 export const deletePinCode = async (serviceName: string) => {
-  return await Keychain.resetInternetCredentials(serviceName)
+  return await SecureStore.deleteItemAsync(serviceName)
 }
 
 export const resetInternalStates = async (asyncStorageKeys: string[]) => {
   return await AsyncStorage.multiRemove(asyncStorageKeys)
 }
-
-export const noBiometricsConfig = Platform.select({
-    android: {
-        accessControl: Keychain.ACCESS_CONTROL.APPLICATION_PASSWORD,
-    },
-    ios: {}
-})

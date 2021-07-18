@@ -6,7 +6,7 @@ const utils_1 = require("./utils");
 const async_storage_1 = require("@react-native-async-storage/async-storage");
 const React = require("react");
 const react_native_1 = require("react-native");
-const Keychain = require("react-native-keychain");
+const SecureStore = require("expo-secure-store");
 const react_native_touch_id_1 = require("react-native-touch-id");
 class PinCodeEnter extends React.PureComponent {
     constructor(props) {
@@ -60,8 +60,8 @@ class PinCodeEnter extends React.PureComponent {
         this.endProcess = this.endProcess.bind(this);
         this.launchTouchID = this.launchTouchID.bind(this);
         if (!this.props.storedPin) {
-            Keychain.getInternetCredentials(this.props.pinCodeKeychainName, utils_1.noBiometricsConfig).then(result => {
-                this.keyChainResult = result && result.password || undefined;
+            SecureStore.getItemAsync(this.props.pinCodeKeychainName).then(password => {
+                this.keyChainResult = password || undefined;
             }).catch(error => {
                 console.log('PinCodeEnter: ', error);
             });
