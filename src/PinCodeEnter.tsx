@@ -216,8 +216,10 @@ class PinCodeEnter extends React.PureComponent<IProps, IState> {
       passcodeFallback: this.props.passcodeFallback
     }
     try {
-      await LocalAuthentication.authenticateAsync().then((success: any) => {
-        this.endProcess(this.props.storedPin || this.keyChainResult)
+      await LocalAuthentication.authenticateAsync().then((response: any) => {
+        if (response.success) {
+          this.endProcess(this.props.storedPin || this.keyChainResult);
+        }
       })
     } catch (e) {
       if (!!this.props.callbackErrorTouchId) {
